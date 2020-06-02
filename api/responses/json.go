@@ -6,12 +6,26 @@ import (
 	"net/http"
 )
 
+type Responses struct{
+	message		string
+	data		interface{}
+	code		int
+}
+
 func JSON(w http.ResponseWriter, statusCode int, data interface{}) {
+
 	w.WriteHeader(statusCode)
-	err := json.NewEncoder(w).Encode(data)
-	if err != nil {
-		fmt.Fprintf(w, "%s", err.Error())
+	elements := map[string]interface{}{
+		"data" : data,
+		"msg" : "success",
+		"code" : statusCode,
 	}
+
+	err := json.NewEncoder(w).Encode(elements)
+	if err != nil {
+		fmt.Fprintf(w, "%s", err.Error())	
+	}
+
 }
 
 func ERROR(w http.ResponseWriter, statusCode int, err error) {
